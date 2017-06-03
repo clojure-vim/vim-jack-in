@@ -8,7 +8,8 @@ auto-starting it. Highly inspired by CIDER.el's feature by the same name.
 COMMANDS                                        *jack_in-commands*
 
 These run inside the directory vim is currently in. In the future it would be
-nice to run relative to the current file.
+nice to run relative to the current file. To run boot & lein,
+|dispatch-:Start| is used with the bang option.
 
                                                 *jack_in-:Boot*
 :Boot [args]           Start boot with CIDER-nrepl and Refactor-nrepl

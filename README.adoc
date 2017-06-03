@@ -3,3 +3,11 @@
 Jack in to Boot & Leiningen from Vim. Inspired by the feature in CIDER.el.
 
 Depends on https://github.com/tpope/vim-dispatch[vim-dispatch] to run commands in background. If you're using Neovim I can recommend https://github.com/radenling/vim-dispatch-neovim[vim-dispatch-neovim]
+
+[source,vim]
+----
+Plug 'tpope/vim-dispatch'
+Plug 'clojure-vim/vim-jack-in'
+" Only in Neovim:
+Plug 'radenling/vim-dispatch-neovim'
+----

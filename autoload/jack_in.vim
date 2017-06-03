@@ -13,9 +13,6 @@ let s:boot_middleware = ['cider.nrepl/cider-middleware', 'refactor-nrepl.middlew
 
 let s:lein_plugins = [['cider/cider-nrepl', '0.15.0-SNAPSHOT'], ['refactor-nrepl', '2.2.0']]
 
-let g:default_lein_task = 'repl'
-let g:default_boot_task = 'repl'
-
 function! jack_in#boot(...)
   let l:boot_string = 'boot -i "(require ''cider.tasks)"'
   for dep in s:boot_deps

@@ -1,0 +1,33 @@
+*jack_in.txt* Automatic REPL starting for Vim
+
+INTRODUCTION                                    *jack_in*
+
+Provides a couple of helper commands for "jacking" in to a Clojure REPL by
+auto-starting it. Highly inspired by CIDER.el's feature by the same name.
+
+COMMANDS                                        *jack_in-commands*
+
+These run inside the directory vim is currently in. In the future it would be
+nice to run relative to the current file.
+
+                                                *jack_in-:Boot*
+:Boot [args]           Start boot with CIDER-nrepl and Refactor-nrepl
+                       automatically injected. [args] is a list of tasks to
+                       run in boot. If not provided, |g:default_boot_task| is
+                       used instead.
+
+                                                *jack_in-:Lein* 
+:Lein [args]           Start lein with CIDER-nrepl and Refactor-nrepl
+                       automatically injected. [args] is a list of tasks to
+                       run in lein. If not provided, |g:default_lein_task| is
+                       used instead.
+
+VARIABLES                                       *jack_in-variables*
+
+*g:default_boot_task*    Control the default task to start boot with. Defaults
+                       to "repl"
+
+*g:default_lein_task*    Control the default task to start lein with. Defaults
+                       to "repl"
+
+ vim:tw=78:ts=8:ft=help:norl:

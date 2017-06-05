@@ -8,10 +8,10 @@ function! s:RunRepl(cmd)
   endif
 endfunction
 
-let s:boot_deps = [['cider/cider-nrepl', '0.15.0-SNAPSHOT'], ['refactor-nrepl', '2.2.0']]
+let s:boot_deps = [['cider/cider-nrepl', '0.15.0-SNAPSHOT'], ['refactor-nrepl', '2.3.1']]
 let s:boot_middleware = ['cider.nrepl/cider-middleware', 'refactor-nrepl.middleware/wrap-refactor']
 
-let s:lein_plugins = [['cider/cider-nrepl', '0.15.0-SNAPSHOT'], ['refactor-nrepl', '2.2.0']]
+let s:lein_plugins = [['cider/cider-nrepl', '0.15.0-SNAPSHOT'], ['refactor-nrepl', '2.3.1']]
 
 function! jack_in#boot(...)
   let l:boot_string = 'boot -i "(require ''cider.tasks)"'

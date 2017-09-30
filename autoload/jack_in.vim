@@ -8,19 +8,22 @@ function! s:RunRepl(cmd)
   endif
 endfunction
 
-let s:boot_deps = [['cider/cider-nrepl', '0.15.0-SNAPSHOT'], ['refactor-nrepl', '2.3.1']]
-let s:boot_middleware = ['cider.nrepl/cider-middleware', 'refactor-nrepl.middleware/wrap-refactor']
-
-let s:lein_plugins = [['cider/cider-nrepl', '0.15.0-SNAPSHOT'], ['refactor-nrepl', '2.3.1']]
+let s:injections = [{'dependency': ['cider/cider-nrepl', '0.15.0'],
+                  \  'lein_plugin': 1,
+                  \  'middleware': 'cider.nrepl/cider-middleware'},
+                  \ {'dependency': ['refactor-nrepl', '2.3.1'],
+                  \  'middleware': 'refactor-nrepl.middleware/wrap-refactor'},
+                  \ {'dependency': ['com.gfredericks.dominic/debug-repl', '0.0.1'],
+                  \  'middleware': 'com.gfredericks.debug-repl/wrap-debug-repl'}]
 
 function! jack_in#boot(...)
   let l:boot_string = 'boot -i "(require ''cider.tasks)"'
-  for dep in s:boot_deps
-    let l:boot_string .= ' -d '.dep[0].':'.dep[1]
+  for inj in s:injections
+    let l:boot_string .= printf(' -d %s:%s', inj['dependency'][0], inj['dependency'][1])
   endfor
   let l:boot_string .= ' cider.tasks/add-middleware'
-  for middleware in s:boot_middleware
-    let l:boot_string .= ' -m '.middleware
+  for inj in s:injections
+    let l:boot_string .= ' -m '.inj['middleware']
   endfor
   if a:0 > 0 && a:1 != ''
     let l:boot_task = join(a:000, ' ')
@@ -32,8 +35,14 @@ endfunction
 
 function! jack_in#lein(...)
   let l:lein_string = 'lein'
-  for plugin in s:lein_plugins
-    let l:lein_string .= ' update-in :plugins conj ''['.plugin[0].' "'.plugin[1].'"]'' --'
+  for inj in s:injections
+    let l:dep_vector = printf('''[%s "%s"]''', inj['dependency'][0], inj['dependency'][1])
+    if !get(inj, 'lein_plugin')
+      let l:lein_string .= ' update-in :dependencies conj '.l:dep_vector.' --'
+      let l:lein_string .= ' update-in :repl-options:nrepl-middleware conj '.inj['middleware'].' --'
+    else
+      let l:lein_string .= ' update-in :plugins conj '.l:dep_vector.' --'
+    endif
   endfor
   if a:0 > 0 && a:1 != ''
     let l:lein_task = join(a:000, ' ')

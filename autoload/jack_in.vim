@@ -8,7 +8,7 @@ function! s:RunRepl(cmd)
   endif
 endfunction
 
-let s:injections = [{'dependency': ['cider/cider-nrepl', '0.15.0'],
+let s:injections = [{'dependency': ['cider/cider-nrepl', '0.15.1'],
                   \  'lein_plugin': 1,
                   \  'middleware': 'cider.nrepl/cider-middleware'},
                   \ {'dependency': ['refactor-nrepl', '2.3.1'],

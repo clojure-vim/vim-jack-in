@@ -8,19 +8,13 @@ function! s:RunRepl(cmd)
   endif
 endfunction
 
-let s:injections = [{'dependency': ['cider/cider-nrepl', '0.15.1'],
-                  \  'lein_plugin': 1,
-                  \  'middleware': 'cider.nrepl/cider-middleware'},
-                  \ {'dependency': ['refactor-nrepl', '2.3.1'],
-                  \  'middleware': 'refactor-nrepl.middleware/wrap-refactor'}]
-
 function! jack_in#boot(...)
   let l:boot_string = 'boot -i "(require ''cider.tasks)"'
-  for inj in s:injections
-    let l:boot_string .= printf(' -d %s:%s', inj['dependency'][0], inj['dependency'][1])
+  for [dep, inj] in items(g:jack_in_injections)
+    let l:boot_string .= printf(' -d %s:%s', dep, inj['version'])
   endfor
   let l:boot_string .= ' cider.tasks/add-middleware'
-  for inj in s:injections
+  for inj in values(g:jack_in_injections)
     let l:boot_string .= ' -m '.inj['middleware']
   endfor
   if a:0 > 0 && a:1 != ''
@@ -33,8 +27,8 @@ endfunction
 
 function! jack_in#lein(...)
   let l:lein_string = 'lein'
-  for inj in s:injections
-    let l:dep_vector = printf('''[%s "%s"]''', inj['dependency'][0], inj['dependency'][1])
+  for [dep, inj] in items(g:jack_in_injections)
+    let l:dep_vector = printf('''[%s "%s"]''', dep, inj['version'])
     if !get(inj, 'lein_plugin')
       let l:lein_string .= ' update-in :dependencies conj '.l:dep_vector.' --'
       let l:lein_string .= ' update-in :repl-options:nrepl-middleware conj '.inj['middleware'].' --'

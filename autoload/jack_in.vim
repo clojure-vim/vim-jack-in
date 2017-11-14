@@ -12,9 +12,7 @@ let s:injections = [{'dependency': ['cider/cider-nrepl', '0.15.1'],
                   \  'lein_plugin': 1,
                   \  'middleware': 'cider.nrepl/cider-middleware'},
                   \ {'dependency': ['refactor-nrepl', '2.3.1'],
-                  \  'middleware': 'refactor-nrepl.middleware/wrap-refactor'},
-                  \ {'dependency': ['com.gfredericks.dominic/debug-repl', '0.0.1'],
-                  \  'middleware': 'com.gfredericks.debug-repl/wrap-debug-repl'}]
+                  \  'middleware': 'refactor-nrepl.middleware/wrap-refactor'}]
 
 function! jack_in#boot(...)
   let l:boot_string = 'boot -i "(require ''cider.tasks)"'

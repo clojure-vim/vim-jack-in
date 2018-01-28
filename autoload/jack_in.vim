@@ -43,3 +43,21 @@ function! jack_in#lein(...)
   endif
   call s:RunRepl(l:lein_string.' '.l:lein_task)
 endfunction
+
+function! jack_in#clj(...)
+  let l:clj_string = 'clj -Sdeps'
+  let l:deps_map = '{:deps {'
+  let l:cider_opts = '-e ''(require (quote cider-nrepl.main)) (cider-nrepl.main/init ['
+
+  for [dep, inj] in items(g:jack_in_injections)
+    let l:deps_map .= dep . ' {:mvn/version "' . inj['version'] . '"} '
+    let l:cider_opts .= ' "'.inj['middleware'].'"'
+  endfor
+
+  let l:deps_map .= '}}'
+  let l:cider_opts .= '])'''
+
+  let l:command = l:clj_string . ' ''' . l:deps_map . ''' ' . l:cider_opts . ' ' . join(a:000, ' ')
+
+  call s:RunRepl(l:command)
+endfunction

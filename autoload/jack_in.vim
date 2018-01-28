@@ -45,7 +45,7 @@ function! jack_in#lein(...)
 endfunction
 
 function! jack_in#clj(...)
-  let l:clj_string = 'clj -Sdeps'
+  let l:clj_string = 'clj'
   let l:deps_map = '{:deps {'
   let l:cider_opts = '-e ''(require (quote cider-nrepl.main)) (cider-nrepl.main/init ['
 
@@ -57,7 +57,7 @@ function! jack_in#clj(...)
   let l:deps_map .= '}}'
   let l:cider_opts .= '])'''
 
-  let l:command = l:clj_string . ' ''' . l:deps_map . ''' ' . l:cider_opts . ' ' . join(a:000, ' ')
+  let l:command = l:clj_string . ' ' . join(a:000, ' ') . ' -Sdeps ''' . l:deps_map . ''' ' . l:cider_opts . ' '
 
   call s:RunRepl(l:command)
 endfunction

@@ -9,7 +9,7 @@ function! s:RunRepl(cmd)
 endfunction
 
 function! jack_in#boot(...)
-  let l:boot_string = 'boot -i "(require ''cider.tasks)"'
+  let l:boot_string = 'boot -x -i "(require ''cider.tasks)"'
   for [dep, inj] in items(g:jack_in_injections)
     let l:boot_string .= printf(' -d %s:%s', dep, inj['version'])
   endfor

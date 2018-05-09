@@ -8,7 +8,7 @@ function! s:RunRepl(cmd)
   endif
 endfunction
 
-function! jack_in#boot(...)
+function! jack_in#boot_cmd(...)
   let l:boot_string = 'boot -x -i "(require ''cider.tasks)"'
   for [dep, inj] in items(g:jack_in_injections)
     let l:boot_string .= printf(' -d %s:%s', dep, inj['version'])
@@ -22,10 +22,14 @@ function! jack_in#boot(...)
   else
     let l:boot_task = g:default_boot_task
   endif
-  call s:RunRepl(l:boot_string.' '.l:boot_task)
+  return l:boot_string.' '.l:boot_task
 endfunction
 
-function! jack_in#lein(...)
+function! jack_in#boot(...)
+  call s:RunRepl(call(function('jack_in#boot_cmd'), a:000))
+endfunction
+
+function! jack_in#lein_cmd(...)
   let l:lein_string = 'lein'
   for [dep, inj] in items(g:jack_in_injections)
     let l:dep_vector = printf('''[%s "%s"]''', dep, inj['version'])
@@ -41,10 +45,15 @@ function! jack_in#lein(...)
   else
     let l:lein_task = g:default_lein_task
   endif
-  call s:RunRepl(l:lein_string.' '.l:lein_task)
+
+  return l:lein_string.' '.l:lein_task
 endfunction
 
-function! jack_in#clj(...)
+function! jack_in#lein(...)
+  call s:RunRepl(call(function('jack_in#lein_cmd'), a:000))
+endfunction
+
+function! jack_in#clj_cmd(...)
   let l:clj_string = 'clj'
   let l:deps_map = '{:deps {'
   let l:cider_opts = '-e ''(require (quote cider-nrepl.main)) (cider-nrepl.main/init ['
@@ -57,7 +66,9 @@ function! jack_in#clj(...)
   let l:deps_map .= '}}'
   let l:cider_opts .= '])'''
 
-  let l:command = l:clj_string . ' ' . join(a:000, ' ') . ' -Sdeps ''' . l:deps_map . ''' ' . l:cider_opts . ' '
+  return l:clj_string . ' ' . join(a:000, ' ') . ' -Sdeps ''' . l:deps_map . ''' ' . l:cider_opts . ' '
+endfunction
 
-  call s:RunRepl(l:command)
+function! jack_in#clj(...)
+  call s:RunRepl(call(function('jack_in#clj_cmd'), a:000))
 endfunction

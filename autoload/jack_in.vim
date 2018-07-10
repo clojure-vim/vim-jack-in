@@ -1,10 +1,21 @@
-function! s:RunRepl(cmd)
-  if exists(':Start!') == 2
-    execute 'Start! '.a:cmd
+function! s:warn(str) abort
+  echohl WarningMsg
+  echomsg a:str
+  echohl None
+  let v:warningmsg = a:str
+endfunction
+
+function! s:RunRepl(cmd) abort
+  if exists(':Start') == 2
+    execute 'Start!' a:cmd
   else
-    tabnew
-    call termopen(a:cmd)
-    tabprevious
+    call s:warn('dispatch.vim not installed, please install it.')
+    if has('nvim')
+      call s:warn('neovim detected, falling back on termopen()')
+      tabnew
+      call termopen(a:cmd)
+      tabprevious
+    endif
   endif
 endfunction
 

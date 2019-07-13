@@ -15,6 +15,6 @@ let g:jack_in_injections =
       \   {'version': '2.4.0-SNAPSHOT',
       \    'middleware': 'refactor-nrepl.middleware/wrap-refactor'}}
 
-command! -nargs=* Boot call jack_in#boot(<q-args>)
-command! -nargs=* Lein call jack_in#lein(<q-args>)
-command! -nargs=* Clj call jack_in#clj(<q-args>)
+command! -bang -nargs=* Boot call jack_in#boot(<bang>0,<q-args>)
+command! -bang -nargs=* Lein call jack_in#lein(<bang>0,<q-args>)
+command! -bang -nargs=* Clj call jack_in#clj(<bang>0,<q-args>)

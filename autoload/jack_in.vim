@@ -7,7 +7,7 @@ endfunction
 
 function! s:RunRepl(cmd) abort
   if exists(':Start') == 2
-    execute 'Start!' a:cmd
+    execute 'Start' . (a:is_bg ? '!' : '') a:cmd
   else
     call s:warn('dispatch.vim not installed, please install it.')
     if has('nvim')
@@ -36,8 +36,8 @@ function! jack_in#boot_cmd(...)
   return l:boot_string.' '.l:boot_task
 endfunction
 
-function! jack_in#boot(...)
-  call s:RunRepl(call(function('jack_in#boot_cmd'), a:000))
+function! jack_in#boot(is_bg,...)
+  call s:RunRepl(call(function('jack_in#boot_cmd'), a:000), a:is_bg)
 endfunction
 
 function! jack_in#lein_cmd(...)
@@ -60,8 +60,8 @@ function! jack_in#lein_cmd(...)
   return l:lein_string.' '.l:lein_task
 endfunction
 
-function! jack_in#lein(...)
-  call s:RunRepl(call(function('jack_in#lein_cmd'), a:000))
+function! jack_in#lein(is_bg, ...)
+  call s:RunRepl(call(function('jack_in#lein_cmd'), a:000), a:is_bg)
 endfunction
 
 function! jack_in#clj_cmd(...)
@@ -80,6 +80,6 @@ function! jack_in#clj_cmd(...)
   return l:clj_string . ' ' . join(a:000, ' ') . ' -Sdeps ''' . l:deps_map . ''' ' . l:cider_opts . ' '
 endfunction
 
-function! jack_in#clj(...)
-  call s:RunRepl(call(function('jack_in#clj_cmd'), a:000))
+function! jack_in#clj(is_bg, ...)
+  call s:RunRepl(call(function('jack_in#clj_cmd'), a:000), a:is_bg)
 endfunction

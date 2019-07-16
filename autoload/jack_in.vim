@@ -5,7 +5,7 @@ function! s:warn(str) abort
   let v:warningmsg = a:str
 endfunction
 
-function! s:RunRepl(cmd) abort
+function! s:RunRepl(cmd, is_bg) abort
   if exists(':Start') == 2
     execute 'Start' . (a:is_bg ? '!' : '') a:cmd
   else

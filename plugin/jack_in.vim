@@ -8,7 +8,7 @@ let g:default_boot_task = 'repl'
 
 let g:jack_in_injections =
       \ {'cider/cider-nrepl':
-      \   {'version': '0.21.0',
+      \   {'version': '0.22.3',
       \    'middleware': 'cider.nrepl/cider-middleware',
       \    'lein_plugin': 1},
       \  'refactor-nrepl':

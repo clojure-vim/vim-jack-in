@@ -17,6 +17,12 @@ nice to run relative to the current file. To run boot & lein,
                        run in boot. If not provided, |g:default_boot_task| is
                        used instead.
 
+                                                *jack_in-:Clj* 
+:Clj [args]            Start clj with CIDER-nrepl and Refactor-nrepl
+                       automatically injected. [args] is a list of options to
+                       run in clj. If not provided, no aditional options will
+                       be used.
+
                                                 *jack_in-:Lein* 
 :Lein [args]           Start lein with CIDER-nrepl and Refactor-nrepl
                        automatically injected. [args] is a list of tasks to

@@ -11,3 +11,47 @@ Plug 'clojure-vim/vim-jack-in'
 " Only in Neovim:
 Plug 'radenling/vim-dispatch-neovim'
 ----
+
+Provides a couple of helper commands for "jacking" in to a Clojure REPL by
+auto-starting it. Highly inspired by CIDER.el's feature by the same name.
+
+== Commands
+
+These run inside the directory vim is currently in. In the future it would be
+nice to run relative to the current file.
+To run boot & lein, `dispatch-:Start` is used with the bang option.
+
+=== Boot
+[source]
+----
+:Boot [args] 
+----
+Start boot with CIDER-nrepl and Refactor-nrepl automatically injected.
+[args] is a list of tasks to run in boot. If not provided,
+`g:default_boot_task` is used instead.
+
+=== Clj
+[source]
+----
+:Clj [args] 
+----
+Start clj with CIDER-nrepl and Refactor-nrepl automatically injected.
+[args] is a list of options to run in clj. If not provided,
+no aditional options will be used.
+
+=== Lein
+[source]
+----
+:Lein [args] 
+----
+Start lein with CIDER-nrepl and Refactor-nrepl automatically injected.
+[args] is a list of tasks to run in lein. If not provided,
+`:default_lein_task` is used instead.
+
+== Variables
+
+`g:default_boot_task`
+Control the default task to start boot with. Defaults to "repl"
+
+`g:default_lein_task`
+Control the default task to start lein with. Defaults to "repl"

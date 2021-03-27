@@ -66,7 +66,7 @@ endfunction
 
 function! jack_in#clj_cmd(...)
   let l:clj_string = 'clj'
-  let l:deps_map = '{:deps {nrepl {:mvn/version "0.7.0"} '
+  let l:deps_map = '{:deps {nrepl/nrepl {:mvn/version "0.7.0"} '
   let l:cider_opts = '-e "(require ''nrepl.cmdline) (nrepl.cmdline/-main \"--middleware\" \"['
 
   for [dep, inj] in items(g:jack_in_injections)

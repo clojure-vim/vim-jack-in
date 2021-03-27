@@ -11,7 +11,7 @@ let g:jack_in_injections =
       \   {'version': '0.25.2',
       \    'middleware': 'cider.nrepl/cider-middleware',
       \    'lein_plugin': 1},
-      \  'refactor-nrepl':
+      \  'refactor-nrepl/refactor-nrepl':
       \   {'version': '2.5.0',
       \    'middleware': 'refactor-nrepl.middleware/wrap-refactor'}}
 

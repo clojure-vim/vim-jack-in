@@ -67,6 +67,7 @@ endfunction
 function! jack_in#clj_cmd(...)
   let l:clj_string = 'clj'
   let l:main_fn = '-m nrepl.cmdline'
+  let l:interactive = '--interactive'
 
   let l:deps = '-Sdeps ''{:deps {nrepl/nrepl {:mvn/version "0.9.0"} '
   let l:cider_opts = '--middleware ''['
@@ -79,7 +80,7 @@ function! jack_in#clj_cmd(...)
   let l:deps .= '}}'''
   let l:cider_opts .= ']'''
 
-  let l:cmd = l:clj_string . ' ' . l:deps . ' ' . l:main_fn . ' ' . l:cider_opts
+  let l:cmd = l:clj_string . ' ' . l:deps . ' ' . l:main_fn . ' ' . l:cider_opts . ' ' . l:interactive
 
   return l:cmd
 endfunction

@@ -88,3 +88,16 @@ endfunction
 function! jack_in#clj(is_bg, ...)
   call s:RunRepl(call(function('jack_in#clj_cmd'), a:000), a:is_bg)
 endfunction
+
+
+function! jack_in#cljs_cmd(...)
+  let l:cljs_string = 'npx shadow-cljs watch app'
+
+  return l:cljs_string
+endfunction
+
+function! jack_in#cljs(is_bg, ...)
+  call s:RunRepl(call(function('jack_in#cljs_cmd'), a:000), a:is_bg)
+endfunction
+
+

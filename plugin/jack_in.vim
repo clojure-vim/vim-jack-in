@@ -18,3 +18,4 @@ let g:jack_in_injections =
 command! -bang -nargs=* Boot call jack_in#boot(<bang>0,<q-args>)
 command! -bang -nargs=* Lein call jack_in#lein(<bang>0,<q-args>)
 command! -bang -nargs=* Clj call jack_in#clj(<bang>0,<q-args>)
+command! -bang -nargs=* Cljs call jack_in#cljs(<bang>0,<q-args>)

@@ -1,3 +1,17 @@
+" Append a window to the right if there is only one window currently,
+" and add it to the bottom right if there are 2 or more.
+function! s:AppendWin()
+  let l:window_count winnr('$')
+  if l:window_count == 1
+    vsplit
+    wincmd l
+  else
+    wincmd l
+    split
+  endif
+  enew
+endfunction
+
 function! s:warn(str) abort
   echohl WarningMsg
   echomsg a:str
@@ -5,81 +19,88 @@ function! s:warn(str) abort
   let v:warningmsg = a:str
 endfunction
 
-function! s:RunRepl(cmd, is_bg) abort
-  if exists(':Start') == 2
-    execute 'Start' . (a:is_bg ? '!' : '') a:cmd
+function! s:FindBufName(name, num)
+  let l:buf_name = a:name . '_' . a:num
+  if bufexists(l:buf_name)
+    let l:num = a:num + 1
+    return s:FindBufName(a:name, l:num)
   else
-    call s:warn('dispatch.vim not installed, please install it.')
-    if has('nvim')
-      call s:warn('neovim detected, falling back on termopen()')
-      tabnew
-      call termopen(a:cmd)
-      tabprevious
-    endif
+    return l:buf_name
   endif
 endfunction
 
-function! jack_in#boot_cmd(...)
-  let l:boot_string = 'boot -x -i "(require ''cider.tasks)"'
-  for [dep, inj] in items(g:jack_in_injections)
-    let l:boot_string .= printf(' -d %s:%s', dep, inj['version'])
-  endfor
-  let l:boot_string .= ' cider.tasks/add-middleware'
-  for inj in values(g:jack_in_injections)
-    let l:boot_string .= ' -m '.inj['middleware']
-  endfor
-  if a:0 > 0 && a:1 != ''
-    let l:boot_task = join(a:000, ' ')
-  else
-    let l:boot_task = g:default_boot_task
-  endif
-  return l:boot_string.' '.l:boot_task
-endfunction
-
-function! jack_in#boot(is_bg,...)
-  call s:RunRepl(call(function('jack_in#boot_cmd'), a:000), a:is_bg)
-endfunction
-
-function! jack_in#lein_cmd(...)
-  let l:lein_string = 'lein'
-  for [dep, inj] in items(g:jack_in_injections)
-    let l:dep_vector = printf('''[%s "%s"]''', dep, inj['version'])
-    if !get(inj, 'lein_plugin')
-      let l:lein_string .= ' update-in :dependencies conj '.l:dep_vector.' --'
-      let l:lein_string .= ' update-in :repl-options:nrepl-middleware conj '.inj['middleware'].' --'
-    else
-      let l:lein_string .= ' update-in :plugins conj '.l:dep_vector.' --'
-    endif
-  endfor
-  if a:0 > 0 && a:1 != ''
-    let l:lein_task = join(a:000, ' ')
-  else
-    let l:lein_task = g:default_lein_task
-  endif
-
-  return l:lein_string.' '.l:lein_task
-endfunction
-
-function! jack_in#lein(is_bg, ...)
-  call s:RunRepl(call(function('jack_in#lein_cmd'), a:000), a:is_bg)
+function! s:RunRepl(name, cmd, is_bg) abort
+  call AppendWin()
+  Rooter
+  call termopen(a:cmd)
+  let l:buf_name = s:FindBufName(a:name, 0)
+  execute "file" l:buf_name
 endfunction
 
 function! jack_in#clj_cmd(...)
-  let l:clj_string = 'clj'
-  let l:deps_map = '{:deps {nrepl/nrepl {:mvn/version "0.7.0"} '
-  let l:cider_opts = '-e "(require ''nrepl.cmdline) (nrepl.cmdline/-main \"--middleware\" \"['
+  let l:clj_string = 'clojure -X:dev'
+  let l:main_fn = ''
+  let l:interactive = ''
+
+  let l:deps = '-Sdeps '' {:deps {nrepl/nrepl {:mvn/version "0.8.3"} '
+  let l:cider_opts = '--middleware ''['
 
   for [dep, inj] in items(g:jack_in_injections)
-    let l:deps_map .= dep . ' {:mvn/version "' . inj['version'] . '"} '
-    let l:cider_opts .= ' '.inj['middleware']
+    let l:deps .= dep . ' {:mvn/version "' . inj['version'] . '"} '
+    let l:cider_opts .= ' "'.inj['middleware'] . '"'
   endfor
 
-  let l:deps_map .= '}}'
-  let l:cider_opts .= ']\")"'
+  let l:deps .= '}}'''
+  let l:cider_opts .= ']'''
 
-  return l:clj_string . ' -Sdeps ''' . l:deps_map . ''' ' . join(a:000, ' ') . ' ' . l:cider_opts . ' '
+  "let l:cmd = l:clj_string . ' ' . l:deps . ' ' . l:main_fn . ' ' . l:cider_opts . ' ' . l:interactive
+  let l:cmd = l:clj_string
+  return l:cmd
 endfunction
 
 function! jack_in#clj(is_bg, ...)
-  call s:RunRepl(call(function('jack_in#clj_cmd'), a:000), a:is_bg)
+  call s:RunRepl("clj", call(function('jack_in#clj_cmd'), a:000), a:is_bg)
 endfunction
+
+
+function! jack_in#shadow_cmd(...)
+  let l:shadow_string = 'npx shadow-cljs watch app'
+
+  return l:shadow_string
+endfunction
+
+function! jack_in#shadow(is_bg, ...)
+  call s:RunRepl("shadow", call(function('jack_in#shadow_cmd'), a:000), a:is_bg)
+endfunction
+
+
+function! jack_in#cljs_cmd(...)
+  let l:clj_string = "clojure -M:cljs:dev "
+  let l:main_fn = ''
+  let l:interactive = ''
+
+  let l:deps = '-Sdeps '' {:deps {nrepl/nrepl {:mvn/version "0.8.3"} '
+  let l:cider_opts = '--middleware ''['
+
+  for [dep, inj] in items(g:jack_in_injections)
+    let l:deps .= dep . ' {:mvn/version "' . inj['version'] . '"} '
+    let l:cider_opts .= ' "'.inj['middleware'] . '"'
+  endfor
+
+  let l:deps .= '}}'''
+  let l:cider_opts .= ']'''
+
+  let l:eval = "--eval \"(require \'shadow-repl)(shadow-repl/start\!)\""
+
+  let l:cmd = l:clj_string . ' ' . l:eval
+
+  return l:cmd
+
+endfunction
+
+
+function! jack_in#cljs(is_bg, ...)
+  call s:RunRepl("cljs", call(function('jack_in#cljs_cmd'), a:000), a:is_bg)
+endfunction
+
+

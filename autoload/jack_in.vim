@@ -65,7 +65,7 @@ function! jack_in#lein(is_bg, ...)
 endfunction
 
 function! jack_in#clj_cmd(...)
-  let l:clj_string = 'clj'
+  let l:clj_string = 'clj -M'
   let l:deps_map = '{:deps {nrepl/nrepl {:mvn/version "0.9.0"} '
   let l:cider_opts = '-e "(require ''nrepl.cmdline) (nrepl.cmdline/-main \"--middleware\" \"['
 

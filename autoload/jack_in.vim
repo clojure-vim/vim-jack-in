@@ -66,23 +66,18 @@ endfunction
 
 function! jack_in#clj_cmd(...)
   let l:clj_string = 'clj'
-  let l:main_fn = '-M -m nrepl.cmdline'
-  let l:interactive = '--interactive'
-
-  let l:deps = '-Sdeps ''{:deps {nrepl/nrepl {:mvn/version "0.9.0"} '
-  let l:cider_opts = '--middleware ''['
+  let l:deps_map = '{:deps {nrepl/nrepl {:mvn/version "0.9.0"} '
+  let l:cider_opts = '-e "(require ''nrepl.cmdline) (nrepl.cmdline/-main \"--middleware\" \"['
 
   for [dep, inj] in items(g:jack_in_injections)
-    let l:deps .= dep . ' {:mvn/version "' . inj['version'] . '"} '
-    let l:cider_opts .= ' "'.inj['middleware'] . '"'
+    let l:deps_map .= dep . ' {:mvn/version "' . inj['version'] . '"} '
+    let l:cider_opts .= ' '.inj['middleware']
   endfor
 
-  let l:deps .= '}}'''
-  let l:cider_opts .= ']'''
+  let l:deps_map .= '}}'
+  let l:cider_opts .= ']\")"'
 
-  let l:cmd = l:clj_string . ' ' . l:deps . ' ' . l:main_fn . ' ' . l:cider_opts . ' ' . l:interactive
-
-  return l:cmd
+  return l:clj_string . ' -Sdeps ''' . l:deps_map . ''' ' . join(a:000, ' ') . ' ' . l:cider_opts . ' '
 endfunction
 
 function! jack_in#clj(is_bg, ...)

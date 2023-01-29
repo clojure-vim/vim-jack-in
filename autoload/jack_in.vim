@@ -76,8 +76,16 @@ function! jack_in#clj_cmd(...)
 
   let l:deps_map .= '}}'
   let l:cider_opts .= ']\")"'
+  let l:m = '-M '
 
-  return l:clj_string . ' -Sdeps ''' . l:deps_map . ''' ' . join(a:000, ' ') . ' ' . l:cider_opts . ' '
+  for arg in a:000
+    if arg =~ '^-M:'
+      let l:m = ''
+      break
+    endif
+  endfor
+
+  return l:clj_string . ' -Sdeps ''' . l:deps_map . ''' ' . join(a:000, ' ') . ' ' . l:m . l:cider_opts . ' '
 endfunction
 
 function! jack_in#clj(is_bg, ...)

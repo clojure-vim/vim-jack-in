@@ -70,7 +70,9 @@ function! jack_in#clj_cmd(...)
   let l:cider_opts = '-e "(require ''nrepl.cmdline) (nrepl.cmdline/-main \"--interactive\" \"--middleware\" \"['
 
   for [dep, inj] in items(g:jack_in_injections)
-    let l:deps_map .= dep . ' {:mvn/version "' . inj['version'] . '"} '
+    if has_key(inj, 'version')
+      let l:deps_map .= dep . ' {:mvn/version "' . inj['version'] . '"} '
+    endif
     let l:cider_opts .= ' '.inj['middleware']
   endfor
 

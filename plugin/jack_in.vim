@@ -8,11 +8,11 @@ let g:default_boot_task = 'repl'
 
 let g:jack_in_injections =
       \ {'cider/cider-nrepl':
-      \   {'version': '0.25.2',
+      \   {'version': '0.30.0',
       \    'middleware': 'cider.nrepl/cider-middleware',
       \    'lein_plugin': 1},
       \  'refactor-nrepl/refactor-nrepl':
-      \   {'version': '2.5.0',
+      \   {'version': '3.6.0',
       \    'middleware': 'refactor-nrepl.middleware/wrap-refactor'}}
 
 command! -bang -nargs=* Boot call jack_in#boot(<bang>0,<q-args>)

@@ -96,7 +96,7 @@ endfunction
 
 function! jack_in#clojure_repl_cmd(...) abort
   let l:clj_string = 'clojure'
-  let l:deps_map = '{:deps {nrepl/nrepl {:mvn/version "1.8.0"} io.github.clojure/clojure-cli.repl-server {:mvn/version "0.1.1"} '
+  let l:deps_map = '{:deps {nrepl/nrepl {:mvn/version "1.8.0"} io.github.clojure/clojure-cli.repl-server {:mvn/version "0.2.1"} '
   let l:middleware = ''
 
   for [dep, inj] in items(g:jack_in_injections)

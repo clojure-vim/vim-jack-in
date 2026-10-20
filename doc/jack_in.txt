@@ -23,6 +23,11 @@ nice to run relative to the current file. To run boot & lein,
                        run in clj. If not provided, no aditional options will
                        be used.
 
+                                                *jack_in-:ClojureREPL*
+:ClojureREPL [args]    Start clojure-cli.repl with its terminal client and
+                       nREPL server. [args] are options and aliases passed to
+                       clojure, such as -M:dev.
+
                                                 *jack_in-:Lein* 
 :Lein [args]           Start lein with CIDER-nrepl and Refactor-nrepl
                        automatically injected. [args] is a list of tasks to

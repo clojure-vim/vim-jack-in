@@ -39,6 +39,13 @@ Start clj with CIDER-nrepl and Refactor-nrepl automatically injected.
 [args] is a list of options to run in clj. If not provided,
 no aditional options will be used.
 
+=== ClojureREPL
+[source]
+----
+:ClojureREPL [args]
+----
+Start https://github.com/clojure/clojure-cli.repl[clojure-cli.repl] with its terminal client and nREPL server. `[args]` are options and aliases passed to clojure.
+
 === Lein
 [source]
 ----

@@ -95,20 +95,18 @@ function! jack_in#clj(is_bg, ...)
 endfunction
 
 function! jack_in#clojure_repl_cmd(...) abort
-  let l:clj_string = 'clojure'
-  let l:deps_map = '{:deps {nrepl/nrepl {:mvn/version "1.8.0"} io.github.clojure/clojure-cli.repl-server {:mvn/version "0.2.1"} '
-  let l:middleware = ''
+  let l:deps_map = '{:deps {io.github.clojure/clojure-cli.repl-server {:mvn/version "0.2.3"} '
+  let l:middleware = []
 
   for [dep, inj] in items(g:jack_in_injections)
     if has_key(inj, 'version')
       let l:deps_map .= dep . ' {:mvn/version "' . inj['version'] . '"} '
     endif
-    let l:middleware .= ' '.inj['middleware']
+    call add(l:middleware, shellescape(inj['middleware']))
   endfor
 
   let l:deps_map .= '}}'
-  let l:middleware = trim(l:middleware)
-  let l:repl_opts = '-e "(require ''[clojure-cli.repl.server :as server]) (let [load-config server/load-config] (with-redefs [server/load-config (fn [lib] (update (load-config lib) :middleware (fnil into []) ''['.l:middleware.']))] (server/-main \"repl\")))"'
+  let l:repl_opts = '-m clojure-cli.repl.server repl ' . join(l:middleware, ' ')
   let l:m = '-M '
 
   for arg in a:000
@@ -118,7 +116,7 @@ function! jack_in#clojure_repl_cmd(...) abort
     endif
   endfor
 
-  return l:clj_string . ' -Sdeps ''' . l:deps_map . ''' ' . join(a:000, ' ') . ' ' . l:m . l:repl_opts
+  return 'clojure -Sdeps ''' . l:deps_map . ''' ' . join(a:000, ' ') . ' ' . l:m . l:repl_opts
 endfunction
 
 function! jack_in#clojure_repl(is_bg, ...) abort
